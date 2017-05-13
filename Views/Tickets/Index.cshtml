@@ -1,0 +1,85 @@
+@model IEnumerable<Ticketer.Database.Ticket>
+
+<div class="row">
+    <div class="col-sm-3 filters-list">
+        <header class="filters-header">Lists</header>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a href="#">
+                    Unsolved
+                    <span class="badge">1</span>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    Unassigned
+                    <span class="badge">0</span>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    New in your groups
+                    <span class="badge">0</span>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    Unsolved in your groups
+                    <span class="badge">1</span>
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a href="#">
+                    Deleted tickets
+                    <span class="badge">0</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-sm-8">
+        <table class="table spacing">
+            <thead>
+                <tr>
+                    <th><input type="checkbox"></th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreatedAt)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Assigned)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td><input type="checkbox"></td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Assigned.UserName)
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
