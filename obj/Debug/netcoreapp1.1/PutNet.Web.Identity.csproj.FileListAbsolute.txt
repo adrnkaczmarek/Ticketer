@@ -1,9 +1,0 @@
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\PutNet.Web.Identity.deps.json
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\PutNet.Web.Identity.runtimeconfig.json
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\PutNet.Web.Identity.runtimeconfig.dev.json
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\PutNet.Web.Identity.csprojResolveAssemblyReference.cache
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\PutNet.Web.Identity.AssemblyInfo.cs
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\PutNet.Web.Identity.dll
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\PutNet.Web.Identity.pdb
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\PutNet.Web.Identity.dll
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\PutNet.Web.Identity.pdb

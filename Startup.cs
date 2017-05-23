@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Ticketer.Database;
+using Ticketer.Database.Enums;
 
 namespace Ticketer
 {
@@ -30,7 +31,7 @@ namespace Ticketer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkSqlServer()
-                    .AddDbContext<TicketContext>(o => o.UseSqlServer(Configuration.GetConnectionString("AzureConnection")))
+                    .AddDbContext<TicketContext>(o => o.UseSqlServer(Configuration.GetConnectionString("LocalConnection")))
                     .AddIdentity<User, IdentityRole>(options => {
                         // Password settings
                         options.Password.RequireDigit = true;

@@ -1,9 +1,0 @@
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\Ticketer.deps.json
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\Ticketer.runtimeconfig.json
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\Ticketer.runtimeconfig.dev.json
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\Ticketer.csprojResolveAssemblyReference.cache
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\Ticketer.AssemblyInfo.cs
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\Ticketer.dll
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\bin\Debug\netcoreapp1.1\Ticketer.pdb
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\Ticketer.dll
-C:\Users\adrn.kaczmarek\Documents\Visual Studio 2017\Projects\IdentityCoreDemo-master\obj\Debug\netcoreapp1.1\Ticketer.pdb

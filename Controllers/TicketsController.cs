@@ -20,7 +20,7 @@ namespace PutNet.Web.Identity.Controllers
         
         public async Task<IActionResult> Index()
         {
-            return View(await _context.tickets.ToListAsync());
+            return View(await _context.Tickets.ToListAsync());
         }
         
         public async Task<IActionResult> Details(int? id)
@@ -30,7 +30,7 @@ namespace PutNet.Web.Identity.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.tickets
+            var ticket = await _context.Tickets
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
@@ -47,7 +47,7 @@ namespace PutNet.Web.Identity.Controllers
                 return NotFound();
             }
 
-            var ticket = await _context.tickets
+            var ticket = await _context.Tickets
                 .SingleOrDefaultAsync(m => m.Id == id);
             if (ticket == null)
             {
@@ -61,8 +61,8 @@ namespace PutNet.Web.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var ticket = await _context.tickets.SingleOrDefaultAsync(m => m.Id == id);
-            _context.tickets.Remove(ticket);
+            var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -84,7 +84,7 @@ namespace PutNet.Web.Identity.Controllers
         
         private bool TicketExists(int id)
         {
-            return _context.tickets.Any(e => e.Id == id);
+            return _context.Tickets.Any(e => e.Id == id);
         }
     }
 }

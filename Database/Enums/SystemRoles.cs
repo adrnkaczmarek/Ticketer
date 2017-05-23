@@ -1,4 +1,4 @@
-﻿namespace Ticketer
+﻿namespace Ticketer.Database.Enums
 {
     public enum SystemRoles
     {
