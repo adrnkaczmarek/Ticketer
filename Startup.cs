@@ -31,7 +31,7 @@ namespace Ticketer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddEntityFrameworkSqlServer()
-                    .AddDbContext<TicketContext>(o => o.UseSqlServer(Configuration.GetConnectionString("LocalConnection")))
+                    .AddDbContext<TicketContext>(o => o.UseSqlServer(Configuration.GetConnectionString("AzureConnection")))
                     .AddIdentity<User, IdentityRole>(options => {
                         // Password settings
                         options.Password.RequireDigit = true;
