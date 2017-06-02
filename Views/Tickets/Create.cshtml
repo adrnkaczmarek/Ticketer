@@ -1,0 +1,71 @@
+@model Ticketer.Database.Ticket
+@using Ticketer.Database.Enums
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Ticket</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CreatedAt" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="CreatedAt" class="form-control" />
+                <span asp-validation-for="CreatedAt" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Priority" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="Priority" class="form-control" asp-items="Html.GetEnumSelectList<TicketPriority>()"></select>
+                <span asp-validation-for="Priority" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="State" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="State" class="form-control" asp-items="Html.GetEnumSelectList<TicketState>()"></select>
+                <span asp-validation-for="State" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="CompanyId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="CompanyId" class ="form-control" asp-items="ViewBag.CompanyId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AssignedId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="AssignedId" class ="form-control" asp-items="ViewBag.AssignedId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="AssignedGroupId" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="AssignedGroupId" class ="form-control" asp-items="ViewBag.AssignedGroupId"></select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>

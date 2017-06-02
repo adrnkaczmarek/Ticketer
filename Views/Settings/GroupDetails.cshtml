@@ -1,0 +1,24 @@
+@model Ticketer.Database.Group
+
+<div>
+    <h4>Group</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Company)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Company.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="GroupEdit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="GroupList">Back to List</a>
+</div>

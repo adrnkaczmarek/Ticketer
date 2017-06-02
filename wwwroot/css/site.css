@@ -36,8 +36,8 @@ nav {
     text-decoration: none;
 }
 
-.ticket-list {
-    margin: 4em 1em;
+.ticket-list tbody .closed {
+    background: #ccccb3;
 }
 
 .list-group-item a {
@@ -231,3 +231,5 @@ textarea {
 .dropdown-toggle {
     text-align: left;
 }
+
+

@@ -1,43 +1,34 @@
 @model IEnumerable<Ticketer.Database.Ticket>
+@using Ticketer.Models.Enums
 
 <div class="row">
     <div class="col-sm-3 filters-list">
         <header class="filters-header">Lists</header>
         <ul class="list-group">
             <li class="list-group-item">
-                <a href="#">
-                    Unsolved
-                    <span class="badge">1</span>
-                </a>
-            </li>
-            <li class="list-group-item">
-                <a href="#">
+                <a asp-controller="Tickets" asp-action="Index" asp-route-filter="@TicketFilters.Unassigned">
                     Unassigned
-                    <span class="badge">0</span>
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="#">
-                    New in your Groups
-                    <span class="badge">0</span>
+                <a asp-controller="Tickets" asp-action="Index" asp-route-filter="@TicketFilters.Open">
+                    Opened
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="#">
-                    Unsolved in your Groups
-                    <span class="badge">1</span>
+                <a asp-controller="Tickets" asp-action="Index" asp-route-filter="@TicketFilters.Closed">
+                    Closed
                 </a>
             </li>
             <li class="list-group-item">
-                <a href="#">
-                    Deleted Tickets
-                    <span class="badge">0</span>
+                <a asp-controller="Tickets" asp-action="Index" asp-route-filter="@TicketFilters.MyGroup">
+                    For my group
                 </a>
             </li>
         </ul>
     </div>
     <div class="col-sm-8">
-        <table class="table spacing">
+        <table class="table spacing ticket-list">
             <thead>
                 <tr>
                     <th><input type="checkbox"></th>
@@ -59,25 +50,25 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td><input type="checkbox"></td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedAt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Assigned.UserName)
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
+                    <tr class="@item.State.ToString().ToLower()">
+                        <td><input type="checkbox"></td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedAt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Assigned.UserName)
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
