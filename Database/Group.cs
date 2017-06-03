@@ -14,6 +14,7 @@ namespace Ticketer.Database
         [Required]
         public string Name { get; set; }
 
+        [Display(Name = "Group")]
         [ForeignKey(nameof(Company))]
         public int CompanyId { get; set; }
 

@@ -232,4 +232,10 @@ textarea {
     text-align: left;
 }
 
+.clear-list-dots {
+    list-style-type: none;
+}
 
+.side-margin{
+    margin: 0 10%;
+}

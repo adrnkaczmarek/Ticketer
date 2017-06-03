@@ -16,15 +16,19 @@ namespace Ticketer.Database
         [Required]
         public string Title { get; set; }
         public string Description { get; set; }
+        [Display(Name = "Created at")]
         [Column(TypeName = "Date")]
         public DateTime CreatedAt { get; set; }
         public TicketPriority Priority { get; set; } = TicketPriority.Normal;
         public TicketState State { get; set; } = TicketState.Open;
         
+        [Display(Name = "Company")]
         [ForeignKey(nameof(Company))]
         public int CompanyId { get; set; }
+        [Display(Name = "Assigned User")]
         [ForeignKey(nameof(Assigned))]
         public string AssignedId { get; set; }
+        [Display(Name = "Group")]
         [ForeignKey(nameof(AssignedGroup))]
         public int AssignedGroupId { get; set; }
 

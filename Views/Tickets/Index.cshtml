@@ -66,11 +66,17 @@
                         </td>
                         <td>
                             <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            <a asp-action="DeleteConfirm" asp-route-id="@item.Id" data-target="#modal-container" data-toggle="modal">Delete</a>
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
+    </div>
+</div>
+
+<div id="modal-container" class="modal fade hidden-print" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
     </div>
 </div>

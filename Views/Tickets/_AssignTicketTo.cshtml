@@ -1,0 +1,29 @@
+@model IEnumerable<Ticketer.Database.User>
+
+<form asp-action="AssignTicketTo">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Assign to new user:</h4>
+    </div>
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <ul class="clear-list-dots">
+                @foreach (var item in Model)
+                {
+                    <li>
+                        <input name="userId" type="radio" value="@item.Id" /> @item.UserName
+                    </li>
+                }
+            </ul>
+        </div>
+        <input type="hidden" name="ticketId" value="@ViewData["TicketId"]" />
+    </div>
+    <div class="modal-footer">
+        <div class="form-actions no-color" style="display: inline">
+            <input type="submit" value="Assign" data-toggle="modal" class="btn btn-default" />
+        </div>
+        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+    </div>
+</form>

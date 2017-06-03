@@ -17,6 +17,11 @@ namespace Ticketer.Controllers
         {
             _context = context;    
         }
+
+        public async Task<IActionResult> Index()
+        {
+            return View();
+        }
         
         public async Task<IActionResult> CompanyList()
         {

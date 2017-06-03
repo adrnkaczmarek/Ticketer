@@ -85,8 +85,8 @@ namespace PutNet.Web.Identity.Controllers
 
             return View(ticket);
         }
-        
-        public async Task<IActionResult> Delete(int? id)
+
+        public async Task<IActionResult> DeleteConfirm(int? id)
         {
             if (id == null)
             {
@@ -101,12 +101,13 @@ namespace PutNet.Web.Identity.Controllers
                 return NotFound();
             }
 
-            return View(ticket);
+            ViewData["Id"] = id;
+            return PartialView("_DeleteConfirm");
         }
         
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.Id == id);
             _context.Tickets.Remove(ticket);
@@ -138,11 +139,18 @@ namespace PutNet.Web.Identity.Controllers
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name", ticket.Company.Id);
             return View(ticket);
         }
-
-
-        public async Task<IActionResult> Reply()
+        
+        public async Task<IActionResult> Reply(int id)
         {
-            return View();
+            ViewData["ticketId"] = id;
+            return PartialView("_Reply");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reply([Bind("Id,TicketId,Content")] TicketResponse response)
+        {
+            return PartialView("_Success");
         }
 
         public async Task<IActionResult> Close(int? id)
@@ -175,11 +183,26 @@ namespace PutNet.Web.Identity.Controllers
             return View();
         }
         
-        public async Task<IActionResult> Assign()
+        public async Task<IActionResult> AssignTicketTo(int Id)
         {
-            return View();
+            User currentUser = await GetCurrentUserAsync();
+            var users = await _context.Users.ToArrayAsync();
+            ViewData["TicketId"] = Id;
+            return PartialView("_AssignTicketTo", users);
         }
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AssignTicketTo(int ticketId, string userId)
+        {
+            var ticket = await _context.Tickets.SingleOrDefaultAsync(m => m.Id == ticketId);
+            var userToAssign = await _context.Users.Where(user => user.Id == userId).SingleOrDefaultAsync();
+            ticket.Assigned = userToAssign;
+            _context.Tickets.Update(ticket);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
         private bool TicketExists(int id)
         {
             return _context.Tickets.Any(e => e.Id == id);

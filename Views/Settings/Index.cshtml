@@ -1,0 +1,28 @@
+<div class="row">
+    <div class="col-sm-3 filters-list">
+        <header class="filters-header">Configuration</header>
+        <ul class="list-group">
+            <li class="list-group-item">
+                <a asp-controller="Settings" asp-action="UsersList">
+                    Users
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Settings" asp-action="CompanyList">
+                    Companies
+                </a>
+            </li>
+            <li class="list-group-item">
+                <a asp-controller="Settings" asp-action="GroupList">
+                    Groups
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="modal-container" class="modal fade hidden-print" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content"></div>
+    </div>
+</div>
