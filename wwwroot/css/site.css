@@ -237,5 +237,12 @@ textarea {
 }
 
 .side-margin{
-    margin: 0 10%;
+    margin: 0 7%;
+}
+
+.tip{
+    text-align: center;
+    word-spacing: 3px;
+    margin: auto;
+    padding: 60px 0;
 }

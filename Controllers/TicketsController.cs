@@ -26,6 +26,8 @@ namespace PutNet.Web.Identity.Controllers
         
         public async Task<IActionResult> Index(TicketFilters? filter)
         {
+            User currentUser = await GetCurrentUserAsync();
+            bool globalFiltering = false;
             var tickets = await _context.Tickets
                 .Include(ticket => ticket.Assigned)
                 .Include(ticket => ticket.Company)
@@ -43,10 +45,11 @@ namespace PutNet.Web.Identity.Controllers
                         tickets = tickets.Where(ticket => ticket.State == TicketState.Open).ToList();
                         break;
                     case TicketFilters.Unassigned:
+                        globalFiltering = true;
                         tickets = tickets.Where(ticket => ticket.Assigned == null).ToList();
                         break;
                     case TicketFilters.MyGroup:
-                        User currentUser = await GetCurrentUserAsync();
+                        globalFiltering = true;
 
                         if (currentUser.Group != null)
                         {
@@ -60,7 +63,11 @@ namespace PutNet.Web.Identity.Controllers
                         break;
                 }
             }
-           
+
+            if (!globalFiltering)
+            {
+                tickets = tickets.Where(ticket => ticket.AssignedId == currentUser.Id).ToList();
+            }
 
             return View(tickets);
         }

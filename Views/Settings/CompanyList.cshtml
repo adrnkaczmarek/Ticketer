@@ -1,29 +1,35 @@
 @model IEnumerable<Ticketer.Database.Company>
 
-<p>
-    <a asp-action="CompanyCreate">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="CompanyEdit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="CompanyDetails" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="CompanyDelete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+<div class="row">
+    @Html.Partial("_ConfigPanel")
+    <div class="col-sm-7">
+        <p>
+            <a asp-action="CompanyCreate">Create New</a>
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            <a asp-action="CompanyEdit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="CompanyDetails" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="CompanyDeleteConfirm" asp-route-id="@item.Id" data-target="#modal-container" data-toggle="modal">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

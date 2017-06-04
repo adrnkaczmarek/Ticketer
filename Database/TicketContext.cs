@@ -1,6 +1,7 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Ticketer.Database;
 
 namespace Ticketer.Database
 {
@@ -56,5 +57,7 @@ namespace Ticketer.Database
 
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Ticketer.Database.User> User { get; set; }
     }
 }

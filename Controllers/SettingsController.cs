@@ -110,33 +110,34 @@ namespace Ticketer.Controllers
             return View(company);
         }
         
-        public async Task<IActionResult> CompanyDelete(int? id)
+        public async Task<IActionResult> CompanyDeleteConfirm(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var company = await _context.Company
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var company = await _context.Company.SingleOrDefaultAsync(m => m.Id == id);
+
             if (company == null)
             {
                 return NotFound();
             }
 
-            return View(company);
+            ViewData["Id"] = id;
+            return PartialView("_DeleteCompanyConfirm");
         }
         
-        [HttpPost, ActionName("CompanyDelete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CompanyDeleteConfirmed(int id)
+        public async Task<IActionResult> CompanyDelete(int id)
         {
             var company = await _context.Company.SingleOrDefaultAsync(m => m.Id == id);
             _context.Company.Remove(company);
             await _context.SaveChangesAsync();
             return RedirectToAction("CompanyList");
         }
-
+        
         private bool CompanyExists(int id)
         {
             return _context.Company.Any(e => e.Id == id);
@@ -239,36 +240,142 @@ namespace Ticketer.Controllers
             return View(@group);
         }
 
-        public async Task<IActionResult> GroupDelete(int? id)
+        public async Task<IActionResult> GroupDeleteConfirm(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var @group = await _context.Groups
-                .SingleOrDefaultAsync(m => m.Id == id);
+            var @group = await _context.Groups.SingleOrDefaultAsync(m => m.Id == id);
+
             if (@group == null)
             {
                 return NotFound();
             }
 
-            return View(@group);
+            ViewData["Id"] = id;
+            return PartialView("_DeleteGroupConfirm");
         }
 
-        [HttpPost, ActionName("GroupDelete")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> GroupDeleteConfirmed(int id)
+        public async Task<IActionResult> GroupDelete(int id)
         {
             var @group = await _context.Groups.SingleOrDefaultAsync(m => m.Id == id);
             _context.Groups.Remove(@group);
             await _context.SaveChangesAsync();
             return RedirectToAction("GroupList");
         }
-
+        
         private bool GroupExists(int id)
         {
             return _context.Groups.Any(e => e.Id == id);
+        }
+
+
+
+        public async Task<IActionResult> UserList()
+        {
+            return View(await _context.User.ToListAsync());
+        }
+
+        public async Task<IActionResult> UserDetails(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        public async Task<IActionResult> UserEdit(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserEdit(string id, [Bind("FirstName,LastName,Id,UserName,NormalizedUserName,Email,NormalizedEmail,EmailConfirmed,PasswordHash,SecurityStamp,ConcurrencyStamp,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,LockoutEnd,LockoutEnabled,AccessFailedCount")] User user)
+        {
+            if (id != user.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(user);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(user.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("UserList");
+            }
+            return View(user);
+        }
+
+        public async Task<IActionResult> UserDeleteConfirm(string id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            ViewData["Id"] = id;
+            return PartialView("_DeleteUserConfirm");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UserDelete(string id)
+        {
+            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            _context.User.Remove(user);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("UserList");
+        }
+
+        private bool UserExists(string id)
+        {
+            return _context.User.Any(e => e.Id == id);
         }
     }
 }

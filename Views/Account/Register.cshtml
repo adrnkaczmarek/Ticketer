@@ -10,11 +10,10 @@
 
 <form asp-action="Register">
     <div class="form-horizontal">
-        <h4>RegisterViewModel</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group">
-            <label asp-for="UserName" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">User name</label>
             <div class="col-md-10">
                 <input asp-for="UserName" class="form-control" />
                 <span asp-validation-for="UserName" class="text-danger"></span>
@@ -35,21 +34,21 @@
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="ConfirmPassword" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">Confirm password</label>
             <div class="col-md-10">
                 <input type="password" asp-for="ConfirmPassword" class="form-control" />
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="FirstName" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">First name</label>
             <div class="col-md-10">
                 <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
         </div>
         <div class="form-group">
-            <label asp-for="LastName" class="col-md-2 control-label"></label>
+            <label class="col-md-2 control-label">Last name</label>
             <div class="col-md-10">
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
@@ -64,7 +63,7 @@
 </form>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-controller="Settings" asp-action="UserList">Back to List</a>
 </div>
 
 @section Scripts {

@@ -1,4 +1,4 @@
-﻿<div class="modal-header">
+<div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -6,11 +6,11 @@
 </div>
 <div class="modal-body">
     <div class="form-horizontal">
-        Sure You want to delete this ticket?
+        Sure You want to delete this group?
     </div>
 </div>
 <div class="modal-footer">
-    <form asp-action="UserDelete" method="post" style="display: inline">
+    <form asp-action="GroupDelete" method="post" style="display: inline">
         <input type="hidden" value="@ViewData["Id"]" name="id" />
         <div class="form-actions no-color" style="display: inline">
             <input type="submit" value="Delete" class="btn btn-default" />

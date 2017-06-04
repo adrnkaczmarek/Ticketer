@@ -52,9 +52,8 @@ namespace Ticketer.Controllers
                 AddErrors(result);
                 return View(model);
             }
-
-            await SignInManager.SignInAsync(user, false);
-            return RedirectToAction(nameof(TicketsController.Index), "Tickets");
+            
+            return RedirectToAction(nameof(SettingsController.UserList), "Settings");
         }
 
         [HttpGet]
@@ -83,12 +82,10 @@ namespace Ticketer.Controllers
             }
             else if(result.RequiresTwoFactor)
             {
-                // Send code to phone number, etc.
                 throw new NotImplementedException();
             }
             else if(result.IsLockedOut)
             {
-                // User is locked out
                 throw new NotImplementedException();
             }
             else
