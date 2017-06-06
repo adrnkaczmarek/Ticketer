@@ -6,16 +6,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Ticketer.Database;
+using Ticketer.Tokens;
 
 namespace Ticketer.Controllers
 {
     public class SettingsController : Controller
     {
         private readonly TicketContext _context;
+        private readonly ITokenFactory _tokenFactory;
 
-        public SettingsController(TicketContext context)
+        public SettingsController(TicketContext context, ITokenFactory tokenFactory)
         {
-            _context = context;    
+            _context = context;
+            _tokenFactory = tokenFactory;
         }
 
         public async Task<IActionResult> Index()
@@ -371,6 +374,12 @@ namespace Ticketer.Controllers
             _context.User.Remove(user);
             await _context.SaveChangesAsync();
             return RedirectToAction("UserList");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetSourceToken(int sourceId)
+        {
+            return Content((await _tokenFactory.GetSourceToken(sourceId)).Encode());
         }
 
         private bool UserExists(string id)

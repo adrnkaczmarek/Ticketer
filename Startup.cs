@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Ticketer.Database;
 using Ticketer.Database.Enums;
+using Ticketer.Database.Seed;
+using Ticketer.Tokens;
 
 namespace Ticketer
 {
@@ -34,10 +36,10 @@ namespace Ticketer
                     .AddDbContext<TicketContext>(o => o.UseSqlServer(Configuration.GetConnectionString("LocalConnection")))
                     .AddIdentity<User, IdentityRole>(options => {
                         // Password settings
-                        options.Password.RequireDigit = true;
-                        options.Password.RequiredLength = 8;
+                        options.Password.RequireDigit = false;
+                        options.Password.RequiredLength = 2;
                         options.Password.RequireNonAlphanumeric = false;
-                        options.Password.RequireUppercase = true;
+                        options.Password.RequireUppercase = false;
                         options.Password.RequireLowercase = false;
                         
                         // Lockout settings
@@ -55,8 +57,13 @@ namespace Ticketer
                     .AddEntityFrameworkStores<TicketContext>()
                     .AddDefaultTokenProviders();
 
+            services.UseTokens(Configuration.GetSection(nameof(TokenProviderOptions)));
+
             // Add framework services.
             services.AddMvc();
+
+            new ExampleSeed().Seed(services.BuildServiceProvider()).Wait();
+            CreateRoles(services.BuildServiceProvider()).Wait();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -86,7 +93,7 @@ namespace Ticketer
                     template: "{controller=Account}/{action=LogIn}/{id?}");
             });
 
-            CreateRoles(serviceProvider).Wait();
+            //CreateRoles(serviceProvider).Wait();
         }
 
         private async Task CreateRoles(IServiceProvider serviceProvider)

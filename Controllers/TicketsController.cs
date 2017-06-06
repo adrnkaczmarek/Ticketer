@@ -9,6 +9,8 @@ using Ticketer.Database;
 using Ticketer.Database.Enums;
 using Ticketer.Models.Enums;
 using Microsoft.AspNetCore.Identity;
+using Ticketer.Models;
+using Ticketer.Tokens;
 
 namespace PutNet.Web.Identity.Controllers
 {
@@ -17,11 +19,13 @@ namespace PutNet.Web.Identity.Controllers
         private readonly TicketContext _context;
         private readonly UserManager<User> _userManager;
         private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+        private readonly ITokenResolver _tokenResolver;
 
-        public TicketsController(UserManager<User> userManager, TicketContext context)
+        public TicketsController(UserManager<User> userManager, TicketContext context, ITokenResolver tokenResolver)
         {
             _context = context;
             _userManager = userManager;
+            _tokenResolver = tokenResolver;
         }
         
         public async Task<IActionResult> Index(TicketFilters? filter)
@@ -145,6 +149,71 @@ namespace PutNet.Web.Identity.Controllers
             ViewData["AssignedGroupId"] = new SelectList(_context.Groups, "Id", "Name", ticket.AssignedGroup.Id);
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name", ticket.Company.Id);
             return View(ticket);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Submit([FromBody] SubmitTicketViewModel model)
+        {
+            if (!ModelState.IsValid || model == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Source source;
+            try
+            {
+                source = await _tokenResolver.ResolveSourceToken(model.Token);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            // Should be only one always
+            var routing = source.SourceRoutings.FirstOrDefault();
+            if (routing == null)
+            {
+                return BadRequest();
+            }
+
+            var ticket = new Ticket
+            {
+                CompanyId = source.CompanyId,
+                AssignedGroupId = routing.GroupId,
+                CreatedAt = DateTime.Now,
+                Priority = model.Priority,
+                Title = model.Title,
+                State = TicketState.Open,
+                ExternalTicketResponses = new List<ExternalTicketResponse>()
+            };
+
+            var response = new ExternalTicketResponse
+            {
+                Content = model.Content,
+                ExternalClient = new ExternalClient
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    Email = model.Email,
+                    Phone = model.Phone
+                },
+                Timestamp = DateTime.Now
+            };
+
+            ticket.ExternalTicketResponses.Add(response);
+            _context.Tickets.Add(ticket);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            //TODO: Return token for ticket
+            return Content("");
         }
         
         public async Task<IActionResult> Reply(int id)

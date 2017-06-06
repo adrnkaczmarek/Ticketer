@@ -43,7 +43,8 @@ namespace Ticketer.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
                 FirstName = model.FirstName,
-                LastName = model.LastName
+                LastName = model.LastName,
+                GroupId = 0
             };
 
             var result = await UserManager.CreateAsync(user, model.Password);
