@@ -6,25 +6,29 @@ using Microsoft.AspNetCore.Mvc;
 using Ticketer.Database;
 using Ticketer.Models;
 using PutNet.Web.Identity.Controllers;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Ticketer.Controllers
 {
     [Authorize]
     public class AccountController : Controller
     {
+        private readonly TicketContext _context;
         private UserManager<User> UserManager { get; }
         private SignInManager<User> SignInManager { get; }
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager) 
+        public AccountController(TicketContext context, UserManager<User> userManager, SignInManager<User> signInManager) 
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            _context = context;
         }
 
         [HttpGet]
         [AllowAnonymous]
         public IActionResult Register()
         {
+            ViewData["GroupId"] = new SelectList(_context.Groups, "Id", "Name");
             return View();
         }
 
@@ -43,7 +47,8 @@ namespace Ticketer.Controllers
                 UserName = model.UserName,
                 Email = model.Email,
                 FirstName = model.FirstName,
-                LastName = model.LastName
+                LastName = model.LastName,
+                GroupId = model.GroupId
             };
 
             var result = await UserManager.CreateAsync(user, model.Password);

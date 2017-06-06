@@ -124,7 +124,7 @@ namespace PutNet.Web.Identity.Controllers
 
         public IActionResult Create()
         {
-            ViewData["AssignedId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["AssignedId"] = new SelectList(_context.Users, "Id", "UserName");
             ViewData["AssignedGroupId"] = new SelectList(_context.Groups, "Id", "Name");
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name");
             return View();
@@ -157,7 +157,7 @@ namespace PutNet.Web.Identity.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Reply([Bind("Id,TicketId,Content")] TicketResponse response)
         {
-            return PartialView("_Success");
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Close(int? id)

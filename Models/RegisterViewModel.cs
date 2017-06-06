@@ -14,5 +14,6 @@ namespace Ticketer.Models
         public string ConfirmPassword { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public int GroupId { get; set; } 
     }
 }

@@ -277,7 +277,7 @@ namespace Ticketer.Controllers
 
         public async Task<IActionResult> UserList()
         {
-            return View(await _context.User.ToListAsync());
+            return View(await _context.User.Include(user => user.Group).ToListAsync());
         }
 
         public async Task<IActionResult> UserDetails(string id)
@@ -310,6 +310,7 @@ namespace Ticketer.Controllers
             {
                 return NotFound();
             }
+
             return View(user);
         }
         
