@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Ticketer.Database;
 
 namespace Ticketer.Tokens
@@ -13,11 +14,13 @@ namespace Ticketer.Tokens
     {
         private readonly TicketContext _context;
         private readonly TokenProviderOptions _options;
+        private readonly ITokenFactory _tokenFactory;
 
-        public TokenResolver(TicketContext context, TokenProviderOptions options)
+        public TokenResolver(TicketContext context, TokenProviderOptions options, ITokenFactory factory)
         {
             _context = context;
             _options = options;
+            _tokenFactory = factory;
         }
 
         public async Task<Source> ResolveSourceToken(string encodedToken)
@@ -105,8 +108,7 @@ namespace Ticketer.Tokens
 
         private bool IsSigned(JwtSecurityToken token)
         {
-            //TODO
-            return true;
+            return _tokenFactory.ValidateToken(token);
         }
     }
 }

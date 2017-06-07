@@ -56,6 +56,25 @@ namespace Ticketer.Tokens
             return CreateToken(claims);
         }
 
+        public JwtSecurityToken RecreateToken(JwtSecurityToken token)
+        {
+            return new JwtSecurityToken(
+                _options.Issuer,
+                _options.Audience,
+                token.Claims.Where(t => !string.Equals(t.Type, JwtRegisteredClaimNames.Aud,
+                    StringComparison.Ordinal)),
+                token.ValidFrom,
+                token.ValidTo,
+                _options.SigningCredentials
+            );
+        }
+
+        public bool ValidateToken(JwtSecurityToken token)
+        {
+            var newToken = new JwtSecurityToken(RecreateToken(token).Encode());
+            return string.Equals(newToken.RawSignature, token.RawSignature, StringComparison.Ordinal);
+        }
+
         private JwtSecurityToken CreateToken(IEnumerable<Claim> claims)
         {
             var jwt = new JwtSecurityToken(

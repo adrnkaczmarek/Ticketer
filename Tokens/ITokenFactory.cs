@@ -10,5 +10,7 @@ namespace Ticketer.Tokens
     {
         Task<JwtSecurityToken> GetSourceToken(int sourceId);
         Task<JwtSecurityToken> GetTicketToken(int ticketId, int externalUserId);
+        JwtSecurityToken RecreateToken(JwtSecurityToken token);
+        bool ValidateToken(JwtSecurityToken token);
     }
 }
