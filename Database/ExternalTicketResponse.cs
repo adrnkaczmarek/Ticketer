@@ -5,10 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations;
+using Ticketer.Database.Interfaces;
 
 namespace Ticketer.Database
 {
-    public class ExternalTicketResponse
+    public class ExternalTicketResponse : ITicketResponse<ExternalClient>
     {
         [Key]
         public int Id { get; set; }
@@ -16,12 +17,12 @@ namespace Ticketer.Database
         [Required]
         public string Content { get; set; }
 
-        [ForeignKey(nameof(ExternalClient))]
-        public int ExternalClientId { get; set; }
+        [ForeignKey(nameof(Sender))]
+        public int SenderId { get; set; }
         [ForeignKey(nameof(Ticket))]
         public int TicketId { get; set; }
 
-        public virtual ExternalClient ExternalClient { get; set; }
+        public virtual ExternalClient Sender { get; set; }
         public virtual Ticket Ticket { get; set; }
     }
 }

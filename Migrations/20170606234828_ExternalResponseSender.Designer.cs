@@ -9,9 +9,10 @@ using Ticketer.Database.Enums;
 namespace Ticketer.Migrations
 {
     [DbContext(typeof(TicketContext))]
-    partial class TicketContextModelSnapshot : ModelSnapshot
+    [Migration("20170606234828_ExternalResponseSender")]
+    partial class ExternalResponseSender
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2")

@@ -9,5 +9,6 @@ namespace Ticketer.Tokens
     public interface ITokenFactory
     {
         Task<JwtSecurityToken> GetSourceToken(int sourceId);
+        Task<JwtSecurityToken> GetTicketToken(int ticketId, int externalUserId);
     }
 }

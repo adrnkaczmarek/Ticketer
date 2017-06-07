@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,23 +10,27 @@ using Ticketer.Database;
 using Ticketer.Database.Enums;
 using Ticketer.Models.Enums;
 using Microsoft.AspNetCore.Identity;
+using Ticketer.Database.Interfaces;
 using Ticketer.Models;
 using Ticketer.Tokens;
 
 namespace PutNet.Web.Identity.Controllers
 {
+    [Authorize]
     public class TicketsController : Controller
     {
         private readonly TicketContext _context;
         private readonly UserManager<User> _userManager;
         private Task<User> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
         private readonly ITokenResolver _tokenResolver;
+        private readonly ITokenFactory _tokenFactory;
 
-        public TicketsController(UserManager<User> userManager, TicketContext context, ITokenResolver tokenResolver)
+        public TicketsController(UserManager<User> userManager, TicketContext context, ITokenResolver tokenResolver, ITokenFactory tokenFactory)
         {
             _context = context;
             _userManager = userManager;
             _tokenResolver = tokenResolver;
+            _tokenFactory = tokenFactory;
         }
         
         public async Task<IActionResult> Index(TicketFilters? filter)
@@ -87,6 +92,10 @@ namespace PutNet.Web.Identity.Controllers
                 .Include(currentTicket => currentTicket.Assigned)
                 .Include(currentTicket => currentTicket.Company)
                 .Include(currentTicket => currentTicket.AssignedGroup)
+                .Include(currentTicket => currentTicket.ExternalTicketResponses)
+                .Include(currentTicket => currentTicket.TicketResponses)
+                .Include($"{nameof(Ticket.ExternalTicketResponses)}.{nameof(ExternalTicketResponse.Sender)}")
+                .Include($"{nameof(Ticket.TicketResponses)}.{nameof(TicketResponse.Sender)}")
                 .SingleOrDefaultAsync(m => m.Id == id);
 
             if (ticket == null)
@@ -94,7 +103,34 @@ namespace PutNet.Web.Identity.Controllers
                 return NotFound();
             }
 
-            return View(ticket);
+            var externalResponses = ticket.ExternalTicketResponses.Select(t => new TicketDetailsResponseViewModel
+            {
+                Content = t.Content,
+                Timestamp = t.Timestamp,
+                Sender = t.Sender
+            });
+
+            var responses = ticket.TicketResponses.Select(t => new TicketDetailsResponseViewModel
+            {
+                Content = t.Content,
+                Timestamp = t.Timestamp,
+                Sender = t.Sender
+            });
+
+            var ticketDetails = new TicketDetailsViewModel()
+            {
+                Id = ticket.Id,
+                Company = ticket.Company,
+                Assigned = ticket.Assigned,
+                Priority = ticket.Priority,
+                State = ticket.State,
+                Title = ticket.Title,
+                CreatedAt = ticket.CreatedAt,
+                Description = ticket.Description,
+                Responses = externalResponses.Concat(responses)
+            };
+
+            return View(ticketDetails);
         }
 
         public async Task<IActionResult> DeleteConfirm(int? id)
@@ -152,6 +188,7 @@ namespace PutNet.Web.Identity.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Submit([FromBody] SubmitTicketViewModel model)
         {
             if (!ModelState.IsValid || model == null)
@@ -190,7 +227,7 @@ namespace PutNet.Web.Identity.Controllers
             var response = new ExternalTicketResponse
             {
                 Content = model.Content,
-                ExternalClient = new ExternalClient
+                Sender = new ExternalClient
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
@@ -211,11 +248,61 @@ namespace PutNet.Web.Identity.Controllers
             {
                 return BadRequest(e.Message);
             }
-
-            //TODO: Return token for ticket
-            return Content("");
+            return Content((await _tokenFactory.GetTicketToken(ticket.Id, response.SenderId)).Encode());
         }
-        
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult SubmitExternalResponse(string token)
+        {
+            return PartialView("_ReplyExternal", new ExternalTicketResponseViewModel
+            {
+                Token = token
+            });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> SubmitExternalResponse(ExternalTicketResponseViewModel model)
+        {
+            if (!ModelState.IsValid || model == null)
+            {
+                return BadRequest(ModelState);
+            }
+
+            Ticket ticket;
+            ExternalClient client;
+            try
+            {
+                ticket = await _tokenResolver.ResolveTicketToken(model.Token);
+                client = await _tokenResolver.ResolveExternalClientToken(model.Token);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+
+            var response = new ExternalTicketResponse
+            {
+                Content = model.Content,
+                Sender = client,
+                Timestamp = DateTime.Now
+            };
+
+            ticket.ExternalTicketResponses.Add(response);
+            _context.Entry(ticket).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            return RedirectToAction("PreviewTicket", new { token = model.Token });
+        }
+
         public async Task<IActionResult> Reply(int id)
         {
             ViewData["ticketId"] = id;
@@ -224,9 +311,35 @@ namespace PutNet.Web.Identity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Reply([Bind("Id,TicketId,Content")] TicketResponse response)
+        public async Task<IActionResult> Reply([Bind("TicketId,Content")] TicketResponse response)
         {
-            return PartialView("_Success");
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user == null)
+            {
+                return Unauthorized();
+            }
+
+            var ticket = await _context.Tickets
+                .Include(t => t.TicketResponses)
+                .SingleOrDefaultAsync(m => m.Id == response.TicketId);
+
+            if (ticket == null)
+            {
+                return NotFound("Ticket not found.");
+            }
+
+            response.Timestamp = DateTime.Now;
+            response.Sender = user;
+            ticket.TicketResponses.Add(response);
+            _context.Entry(ticket).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = response.TicketId });
         }
 
         public async Task<IActionResult> Close(int? id)
@@ -257,6 +370,46 @@ namespace PutNet.Web.Identity.Controllers
             }
 
             return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> PreviewTicket(string token)
+        {
+            var ticket = await _tokenResolver.ResolveTicketToken(token);
+            var user = await _tokenResolver.ResolveExternalClientToken(token);
+
+            ViewData["user"] = user;
+            ViewData["token"] = token;
+
+            var externalResponses = ticket.ExternalTicketResponses.Select(t => new TicketDetailsResponseViewModel
+            {
+                Content = t.Content,
+                Timestamp = t.Timestamp,
+                Sender = t.Sender
+            });
+
+            var responses = ticket.TicketResponses.Select(t => new TicketDetailsResponseViewModel
+            {
+                Content = t.Content,
+                Timestamp = t.Timestamp,
+                Sender = t.Sender
+            });
+
+            var ticketDetails = new TicketDetailsViewModel()
+            {
+                Id = ticket.Id,
+                Company = ticket.Company,
+                Assigned = ticket.Assigned,
+                Priority = ticket.Priority,
+                State = ticket.State,
+                Title = ticket.Title,
+                CreatedAt = ticket.CreatedAt,
+                Description = ticket.Description,
+                Responses = externalResponses.Concat(responses)
+            };
+
+            return View(ticketDetails);
         }
         
         public async Task<IActionResult> AssignTicketTo(int Id)

@@ -4,10 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Ticketer.Database.Interfaces;
 
 namespace Ticketer.Database
 {
-    public class User : IdentityUser
+    public class User : IdentityUser, IUser
     {
         [Display(Name = "First name")]
         public string FirstName { get; set; }
@@ -18,5 +19,9 @@ namespace Ticketer.Database
 
         public virtual Group Group { get; set; }
         public virtual ICollection<AutomatedResponse> CreatedAutomatedResponses { get; set; }
+
+        [NotMapped]
+        public bool IsExternal => false;
+
     }
 }

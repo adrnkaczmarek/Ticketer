@@ -1,0 +1,67 @@
+@using System.Linq
+@using Ticketer.Database
+@model Ticketer.Models.TicketDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "_ExternalLayout";
+    var client = (ExternalClient) ViewData["user"];
+    var name = $"{client.FirstName} {client.LastName}";
+    var token = (string) ViewData["token"];
+
+    var displayName = string.IsNullOrWhiteSpace(name)
+        ? client.Email
+        : $"{name} ({client.Email})";
+}
+
+<h2>Welcome @displayName!</h2>
+
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-sm-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+                <dt>
+                    @Html.DisplayNameFor(model => model.CreatedAt)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.CreatedAt)
+                </dd>
+            </dl>
+        </div>
+        <div class="col-sm-6">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.State)
+                </dt>
+                <dd>
+                    @Html.DisplayFor(model => model.State)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="ticket-responses">
+        @foreach (var response in Model.Responses.OrderBy(r => r.Timestamp))
+        {
+            <div class="row ticket-response @(response.Sender.IsExternal ? "" : "external")">
+                <div class="sender-info">
+                    <span class="timestamp">@response.Timestamp</span>
+                    <span class="username">@response.Sender.FirstName @response.Sender.LastName</span>
+                    <span class="email">@response.Sender.Email</span>
+                </div>
+                <div class="content">
+                    @response.Content
+                </div>
+            </div>
+        }
+    </div>
+    <div>
+        <a asp-action="SubmitExternalResponse" asp-route-token="@token" data-target="#modal-container" data-toggle="modal">Reply</a>
+    </div>
+</div>

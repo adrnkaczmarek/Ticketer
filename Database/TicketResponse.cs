@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using Ticketer.Database.Interfaces;
 
 namespace Ticketer.Database
 {
-    public class TicketResponse
+    public class TicketResponse : ITicketResponse<User>
     {
         [Key]
         public int Id { get; set; }

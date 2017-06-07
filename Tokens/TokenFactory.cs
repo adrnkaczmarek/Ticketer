@@ -39,6 +39,23 @@ namespace Ticketer.Tokens
             return CreateToken(claims);
         }
 
+        public async Task<JwtSecurityToken> GetTicketToken(int ticketId, int externalUserId)
+        {
+            var ticket = await _context.Tickets.SingleOrDefaultAsync(s => s.Id == ticketId);
+            if (ticket == null)
+            {
+                return null;
+            }
+
+            var claims = new HashSet<Claim>(GetBaseClaims())
+            {
+                new Claim(TokenClaims.TicketId, ticket.Id.ToString()),
+                new Claim(TokenClaims.ExternalUserId, externalUserId.ToString())
+            };
+
+            return CreateToken(claims);
+        }
+
         private JwtSecurityToken CreateToken(IEnumerable<Claim> claims)
         {
             var jwt = new JwtSecurityToken(

@@ -9,5 +9,7 @@ namespace Ticketer.Tokens
     public interface ITokenResolver
     {
         Task<Source> ResolveSourceToken(string encodedToken);
+        Task<Ticket> ResolveTicketToken(string encodedToken);
+        Task<ExternalClient> ResolveExternalClientToken(string encodedToken);
     }
 }

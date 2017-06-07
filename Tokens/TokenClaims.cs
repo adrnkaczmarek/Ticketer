@@ -9,5 +9,7 @@ namespace Ticketer.Tokens
     {
         public const string SourceWebsite = "SourceWebsite";
         public const string CompanyId = "CompanyId";
+        public const string TicketId = "TicketId";
+        public const string ExternalUserId = "ExternalUserId";
     }
 }

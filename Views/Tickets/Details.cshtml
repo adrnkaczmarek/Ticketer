@@ -1,4 +1,5 @@
-@model Ticketer.Database.Ticket
+@using System.Linq
+@model Ticketer.Models.TicketDetailsViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -63,6 +64,21 @@
                 @Html.DisplayFor(model => model.Description)
             </dd>
         </dl>
+    </div>
+    <div class="ticket-responses">
+        @foreach (var response in Model.Responses.OrderBy(r => r.Timestamp))
+        {
+            <div class="row ticket-response @(response.Sender.IsExternal ? "external" : "")">
+                <div class="sender-info">
+                    <span class="timestamp">@response.Timestamp</span>
+                    <span class="username">@response.Sender.FirstName @response.Sender.LastName</span>
+                    <span class="email">@response.Sender.Email</span>
+                </div>    
+                <div class="content">
+                    @response.Content
+                </div>
+            </div>    
+        }
     </div>
     <div>
         <a asp-action="Reply" asp-route-id="@Model.Id" data-target="#modal-container" data-toggle="modal">Reply</a> |
