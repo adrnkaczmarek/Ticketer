@@ -165,12 +165,14 @@ namespace Ticketer.Controllers
 
             var @group = await _context.Groups
                 .Include(singleGroup => singleGroup.Company)
+                .Include(singleGroup => singleGroup.Users)
                 .SingleOrDefaultAsync(m => m.Id == id);
+
             if (@group == null)
             {
                 return NotFound();
             }
-
+            
             return View(@group);
         }
         
@@ -190,6 +192,7 @@ namespace Ticketer.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("GroupList");
             }
+
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name", @group.CompanyId);
             return View(@group);
         }
@@ -202,10 +205,12 @@ namespace Ticketer.Controllers
             }
 
             var @group = await _context.Groups.SingleOrDefaultAsync(m => m.Id == id);
+
             if (@group == null)
             {
                 return NotFound();
             }
+
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name", @group.CompanyId);
             return View(@group);
         }
@@ -239,6 +244,7 @@ namespace Ticketer.Controllers
                 }
                 return RedirectToAction("GroupList");
             }
+
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name", @group.CompanyId);
             return View(@group);
         }
@@ -280,7 +286,7 @@ namespace Ticketer.Controllers
 
         public async Task<IActionResult> UserList()
         {
-            return View(await _context.User.ToListAsync());
+            return View(await _context.User.Include(user => user.Group).ToListAsync());
         }
 
         public async Task<IActionResult> UserDetails(string id)
@@ -307,12 +313,17 @@ namespace Ticketer.Controllers
                 return NotFound();
             }
 
-            var user = await _context.User.SingleOrDefaultAsync(m => m.Id == id);
+            var user = await _context.User
+                .Include(userTmp => userTmp.Roles)
+                .SingleOrDefaultAsync(m => m.Id == id);
 
             if (user == null)
             {
                 return NotFound();
             }
+            
+            ViewData["Roles"] = new SelectList(_context.Roles, "Id", "Name");
+
             return View(user);
         }
         

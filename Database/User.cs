@@ -13,10 +13,9 @@ namespace Ticketer.Database
         [Display(Name = "First name")]
         public string FirstName { get; set; }
         [Display(Name = "Last name")]
-        public string LastName { get; set; } 
+        public string LastName { get; set; }
         [ForeignKey(nameof(Group))]
         public int GroupId { get; set; }
-
         public virtual Group Group { get; set; }
         public virtual ICollection<AutomatedResponse> CreatedAutomatedResponses { get; set; }
 

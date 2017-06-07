@@ -164,7 +164,7 @@ namespace PutNet.Web.Identity.Controllers
 
         public IActionResult Create()
         {
-            ViewData["AssignedId"] = new SelectList(_context.Users, "Id", "Id");
+            ViewData["AssignedId"] = new SelectList(_context.Users, "Id", "UserName");
             ViewData["AssignedGroupId"] = new SelectList(_context.Groups, "Id", "Name");
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name");
             return View();
@@ -181,7 +181,7 @@ namespace PutNet.Web.Identity.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewData["AssignedId"] = new SelectList(_context.Users, "Id", "Id", ticket.Assigned.Id);
+            ViewData["AssignedId"] = new SelectList(_context.Users, "Id", "UserName", ticket.Assigned.Id);
             ViewData["AssignedGroupId"] = new SelectList(_context.Groups, "Id", "Name", ticket.AssignedGroup.Id);
             ViewData["CompanyId"] = new SelectList(_context.Company, "Id", "Name", ticket.Company.Id);
             return View(ticket);
